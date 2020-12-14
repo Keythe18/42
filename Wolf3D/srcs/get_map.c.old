@@ -1,0 +1,128 @@
+#include "../includes/wolf3d.h"
+
+/*
+static	int		*convert_data_to_int(char *line, int size)
+{
+	int			i;
+	int			*data;
+
+	i = 0;
+	data = NULL;
+	if ((data = (int*)malloc(sizeof(int) * 20)) == NULL)
+		return (NULL);
+	while (i < size)
+	{
+		data[i] = line[i] - '0';
+		i++;
+	}
+	return (data);
+}
+*/
+void			print_map(t_env *env)
+{
+	int i;
+	int	j;
+	
+	i = 0;
+	while (env->map[i] && env->map)
+	{
+		j = 0;
+		while (env->map[i][j] < env->map_size)
+		{
+			printf("%d", env->map[i][j]);
+			j++;
+		}
+		printf("\n");
+		i++;
+	}
+}
+
+char **getfield(int fd)
+{
+	char **res;
+	char buf[64];
+	char *line;
+	char *tmp;
+	int ret;
+
+	line = NULL;
+	while ((ret = read(fd, buf, 63)) > 0)
+	{
+		buf[ret] = '\0';
+		tmp = line;
+		line = ft_strjoin(tmp, buf);
+		ft_strdel(&tmp);
+	}
+	res = ft_strsplit(line, '\n');
+	ft_strdel(&line);
+	return (res);
+}
+
+int ft_tablen(char **tab)
+{
+	int i;
+
+	i = 0;
+	while (tab && tab[i])
+		i++;
+	return (i);
+}
+
+int **convert(char **tab)
+{
+	int	**res;
+	int	i;
+	int j;
+
+	i = 0;
+	res = malloc(sizeof(int*) * ft_tablen(tab));
+	while (i < ft_tablen(tab))
+	{
+		j = 0;
+		res = malloc(sizeof(int) * ft_strlen(tab[i]));
+		while (j < ft_strlen(tab[i]))
+		{
+			res[i][j] = tab[i][j] - '0';
+			j++;
+		}
+		i++;
+	}
+	return (res);
+}
+
+int				**get_map(int fd, t_env *env)
+{
+	char	**tab;
+	
+	tab = (char**)malloc(sizeof(char*) * 20);
+	tab = getfield(fd);
+	
+//	int			i;
+//	int			ret;
+//	char		*line;
+
+//	i = 0;
+	env->map = NULL;
+//	ret = get_next_line(fd, &line);
+	if (((env->map = (int**)malloc(sizeof(int*) * 20)) == NULL) || ret <= 0)
+		return (0);
+	env->map = convert(tab);
+	/*
+	while (i < 20)
+		env->map[i++] = malloc(sizeof(int) * 20);
+	env->map_size = 20;
+	env->map = ;
+	*/
+/*	while (ret > 0)
+	{
+		if (line)
+		{
+			env->map[i] = convert_data_to_int(line, ft_strlen(line));
+			i++;
+			ft_strdel(&line);
+		}
+//		ret = get_next_line(fd, &line);
+	}
+	print_map(env);*/
+	return (env->map);
+}
